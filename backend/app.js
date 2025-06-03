@@ -8,6 +8,18 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
+const { speakText } = require("./tts");
+
+app.get("/test-tts", async (req, res) => {
+  try {
+    const result = await speakText("Tes langsung", "id-ID-GadisNeural");
+    res.send("✅ Azure TTS berhasil. Audio size: " + result.length);
+  } catch (e) {
+    console.error("❌ TTS test error:", e);
+    res.status(500).send("❌ Azure TTS gagal: " + e.message);
+  }
+});
+
 // ✅ Konfigurasi CORS lebih spesifik
 const corsOptions = {
   origin: function (origin, callback) {
