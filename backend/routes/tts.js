@@ -4,6 +4,10 @@ const express = require('express');
 const sdk = require('microsoft-cognitiveservices-speech-sdk');
 const router = express.Router();
 
+console.log("📦 Azure region:", process.env.AZURE_SPEECH_REGION);
+console.log("📦 Azure key exists:", !!process.env.AZURE_SPEECH_KEY);
+
+
 const customVoices = {
   'en': 'en-US-JennyNeural',
   'zh': 'zh-CN-XiaoyanNeural', 
@@ -305,10 +309,19 @@ router.post('/speak', async (req, res) => {
         clearTimeout(timeout);
         isResponded = true;
         synthesizer.close();
+
+        if (result.reason === sdk.ResultReason.SynthesizingAudioCompleted) {
+          console.log("✅ Azure TTS succeeded. Audio length:", result.audioData?.length || 0);
+          res.header('Content-Type', 'audio/mpeg');
+          return res.send(Buffer.from(result.audioData));
+        }
         if (result.reason === sdk.ResultReason.Canceled) {
           const cancellation = sdk.SpeechSynthesisCancellationDetails.fromResult(result);
+          console.error("❌ Azure TTS canceled. Reason:", cancellation.reason);
+          console.error("❌ Error details:", cancellation.errorDetails);
           return res.status(500).json({ error: cancellation.errorDetails });
         }
+        console.error("❌ Unexpected result from Azure TTS:", result);
         res.header('Content-Type', 'audio/mpeg');
         res.send(Buffer.from(result.audioData));
       },
