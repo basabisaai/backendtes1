@@ -32,11 +32,11 @@ app.use(cors(corsOptions)); // Gunakan opsi CORS yang didefinisikan
 app.use(express.json());
 
 // Routes
-const aiRouter = require('./routes/ai');
-const ttsRouter = require('./routes/tts');
-const langDetectRouter = require('./routes/langdetect');
-const intentRoute = require('./routes/intent');
-const extractMandarin = require('./routes/extractMandarin');
+const aiRouter = require('./ai');
+const ttsRouter = require('./tts');
+const langDetectRouter = require('./langdetect');
+const intentRoute = require('./intent');
+const extractMandarin = require('./extractMandarin');
 
 app.use('/api/ai', aiRouter);
 app.use('/api/tts', ttsRouter);
