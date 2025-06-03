@@ -8,18 +8,6 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
-const { speakText } = require("./tts");
-
-app.get("/test-tts", async (req, res) => {
-  try {
-    const result = await speakText("Tes langsung", "id-ID-GadisNeural");
-    res.send("✅ Azure TTS berhasil. Audio size: " + result.length);
-  } catch (e) {
-    console.error("❌ TTS test error:", e);
-    res.status(500).send("❌ Azure TTS gagal: " + e.message);
-  }
-});
-
 // ✅ Konfigurasi CORS lebih spesifik
 const corsOptions = {
   origin: function (origin, callback) {
@@ -44,11 +32,11 @@ app.use(cors(corsOptions)); // Gunakan opsi CORS yang didefinisikan
 app.use(express.json());
 
 // Routes
-const aiRouter = require('./routes/ai');
-const ttsRouter = require('./routes/tts');
-const langDetectRouter = require('./routes/langdetect');
-const intentRoute = require('./routes/intent');
-const extractMandarin = require('./routes/extractMandarin');
+const aiRouter = require('./backend/routes/ai');
+const ttsRouter = require('./backend/routes/tts');
+const langDetectRouter = require('./backend/routes/langdetect');
+const intentRoute = require('./backend/routes/intent');
+const extractMandarin = require('./backend/routes/extractMandarin');
 
 app.use('/api/ai', aiRouter);
 app.use('/api/tts', ttsRouter);
