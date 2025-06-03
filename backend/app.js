@@ -56,7 +56,4 @@ app.use('/api', langDetectRouter);
 app.use('/api', intentRoute); // ⬅️ Penting ini
 app.use('/api', extractMandarin);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
-});
+module.exports = app;
